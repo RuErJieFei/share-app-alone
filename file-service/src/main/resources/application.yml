@@ -1,0 +1,27 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: file-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 678a3875-d937-4927-96c8-77fd21acc297
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: 678a3875-d937-4927-96c8-77fd21acc297
+        group: DEFAULT_GROUP
+        timeout: 5000
+        config-long-poll-timeout: 10000
+        config-retry-time: 2000
+        max-retry: 3
+        # ?????????
+        refresh-enabled: true
+
+minio:
+  endPoint: http://120.78.125.171:9000
+  accessKey: minioadmin
+  secretKey: minioadmin

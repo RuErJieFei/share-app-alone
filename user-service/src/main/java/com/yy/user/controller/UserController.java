@@ -1,5 +1,6 @@
 package com.yy.user.controller;
 
+import com.yy.user.auth.CheckLogin;
 import com.yy.user.domain.dto.UserDto;
 import com.yy.user.domain.entity.User;
 import com.yy.user.service.UserService;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.yy.user.common.ResponseResult;
 import com.yy.user.common.ResultCode;
+
+import java.util.Map;
 
 /**
  * @description:
@@ -24,13 +27,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("{id}")
+    @CheckLogin
     public ResponseResult getUserById(@PathVariable Integer id) {
         return ResponseResult.success(userService.findById(id));
     }
 
     @PostMapping(value = "/login")
     public ResponseResult login(@RequestBody UserDto userDto) {
-        User user = userService.login(userDto);
+        Map user = userService.login(userDto);
         if(user == null) {
             return ResponseResult.failure(ResultCode.USER_SIGN_IN_FAIL);
         } else {

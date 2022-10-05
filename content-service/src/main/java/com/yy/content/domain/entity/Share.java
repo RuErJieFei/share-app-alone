@@ -77,7 +77,7 @@ public class Share {
     /**
      * 是否显示 0:否 1:是
      */
-    private Integer showFlag;
+    private Boolean showFlag;
 
     /**
      * 审核状态 NOT_YET: 待审核 PASSED:审核通过 REJECTED:审核不通过

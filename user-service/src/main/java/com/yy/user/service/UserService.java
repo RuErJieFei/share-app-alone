@@ -3,6 +3,8 @@ package com.yy.user.service;
 import com.yy.user.domain.dto.UserDto;
 import com.yy.user.domain.entity.User;
 
+import java.util.Map;
+
 /**
  * @description:
  * @author: yy
@@ -22,5 +24,5 @@ public interface UserService {
      * @param userDto userDto
      * @return user
      */
-    User login(UserDto userDto);
+    Map login(UserDto userDto);
 }

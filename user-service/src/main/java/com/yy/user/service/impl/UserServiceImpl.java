@@ -2,12 +2,16 @@ package com.yy.user.service.impl;
 
 import com.yy.user.domain.dto.UserDto;
 import com.yy.user.domain.entity.User;
+import com.yy.user.utils.JwtOperator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.yy.user.repository.UserRepository;
 import com.yy.user.service.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @description:
@@ -28,8 +32,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(UserDto userDto) {
-        return userRepository.findByMobileAndPassword(userDto.getUsername(), userDto.getPassword());
+    public Map login(UserDto userDto) {
+        JwtOperator jwtOperator = new JwtOperator();
+        HashMap<String, Object> claims = new HashMap<>();
+        User user = userRepository.findByMobileAndPassword(userDto.getUsername(), userDto.getPassword());
+        claims.put("id", user.getId());
+        claims.put("role", user.getRoles());
+        claims.put("nickname",user.getNickname());
+        String token = jwtOperator.generateToken(claims);
+        HashMap<Object, Object> result = new HashMap<>();
+//        result.put("user", user);
+        result.put("token", token);
+        return result;
     }
 }
 

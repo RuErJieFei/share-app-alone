@@ -1,5 +1,7 @@
 package com.yy.content.service.impl;
 
+import com.yy.content.domain.dto.ShareAuditDto;
+import com.yy.content.domain.dto.ShareDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import com.yy.content.repository.ShareRepository;
 import com.yy.content.service.ShareService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @description:
@@ -33,4 +36,16 @@ public class ShareServiceImpl implements ShareService {
         return shareRepository.findAll();
     }
 
+
+    @Override
+    public Share auditShare(ShareAuditDto shareAuditDto) throws IllegalAccessException {
+        Share share = shareRepository.findById(shareAuditDto.getId()).orElse(null);
+        if (!Objects.equals("NOT_YET", share.getAuditStatus())) {
+            throw new IllegalAccessException("参数非法！改分享已审核！");
+        }
+        share.setAuditStatus(shareAuditDto.getAuditStatusEnum().toString());
+        share.setReason(shareAuditDto.getReason());
+        share.setShowFlag(shareAuditDto.getShowFlag());
+        return shareRepository.saveAndFlush(share);
+    }
 }

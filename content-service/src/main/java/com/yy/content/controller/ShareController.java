@@ -2,7 +2,10 @@ package com.yy.content.controller;
 
 //import com.alibaba.csp.sentinel.annotation.SentinelResource;
 //import com.alibaba.csp.sentinel.slots.block.BlockException;
+
 import com.alibaba.fastjson.JSONObject;
+import com.yy.content.auth.CheckAuthorization;
+import com.yy.content.domain.dto.ShareAuditDto;
 import com.yy.content.domain.dto.ShareDto;
 import com.yy.content.domain.entity.Share;
 import com.yy.content.domain.entity.User;
@@ -11,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.yy.content.common.ResponseResult;
 import com.yy.content.service.ShareService;
 
@@ -33,7 +33,7 @@ public class ShareController {
 
     private final ShareService shareService;
 
-     private final UserService userService;
+    private final UserService userService;
 
     @GetMapping("/all")
     public ResponseResult getAllShares() {
@@ -50,5 +50,11 @@ public class ShareController {
         User user = JSONObject.toJavaObject(obj, User.class);
         ShareDto shareDTO = ShareDto.builder().share(share).nickname(user.getNickname()).avatar(user.getAvatar()).build();
         return ResponseResult.success(shareDTO);
+    }
+
+    @PostMapping("/check")
+    @CheckAuthorization("admin")
+    ResponseResult auditContent(@RequestBody ShareAuditDto shareAuditDto) throws IllegalAccessException {
+        return ResponseResult.success(shareService.auditShare(shareAuditDto));
     }
 }
